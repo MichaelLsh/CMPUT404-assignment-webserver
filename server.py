@@ -32,8 +32,8 @@ class MyWebServer(socketserver.BaseRequestHandler):
     
     def handle(self):
         self.data = self.request.recv(1024).strip()
-        print ("Got a request of: %s\n" % self.data)
-        
+        # print ("Got a request of: %s\n" % self.data)
+
         """
         Citation for the following code block
         Author: Liam Kelly https://stackoverflow.com/users/1987437/liam-kelly
@@ -76,8 +76,8 @@ class MyWebServer(socketserver.BaseRequestHandler):
         try:
             file_content = self.file_content_reader(file_local_path)
         except IsADirectoryError:
-            status_code = "301 Moved Permanently"
-            server_response = protocol_version + " " + status_code + "Location: " + file_local_path + "/"
+            status_code = "301 Moved Permanently \r\n"
+            server_response = protocol_version + " " + status_code
             self.request.sendall(bytearray(server_response, "utf-8"))
 
         # When the local path and requested file are valid
@@ -129,9 +129,14 @@ class MyWebServer(socketserver.BaseRequestHandler):
         file_local_path = "./www" + requestedFilePath
         if os.path.isfile(file_local_path):
             return file_local_path
-        else:
+        elif "index.html" in requestedFilePath:
             assert(os.path.isdir(file_local_path))
             return file_local_path + "index.html"
+        elif "base.css" in requestedFilePath:
+            assert(os.path.isdir(file_local_path))
+            return file_local_path + "base.css"
+        elif "deep.css" in requestedFilePath:
+            return file_local_path + "deep.css"
 
     def file_type_identifier(self, fileLocalPath):
         # The file actually has a specific type
