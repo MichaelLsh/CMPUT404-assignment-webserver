@@ -101,13 +101,16 @@ class MyWebServer(socketserver.BaseRequestHandler):
             return False
         else:
             return False
-
+        
     def file_or_directory_exists(self, requestedFilePath):
         """
         Helper function for the webserver to check validness of the requested file or local path to the requested file 
         """
         file_local_path = "./www" + requestedFilePath
-        if os.path.isdir(file_local_path) or os.path.isfile(file_local_path):
+        if os.path.isdir(file_local_path): 
+            if os.path.isfile(file_local_path):
+                return True
+        elif os.path.isfile(file_local_path):
             return True
         else:
             return False
@@ -127,17 +130,13 @@ class MyWebServer(socketserver.BaseRequestHandler):
         Helper function for locating the requested file's path locally
         """
         file_local_path = "./www" + requestedFilePath
-        if os.path.isfile(file_local_path):
-            return file_local_path
-        elif "index.html" in requestedFilePath:
-            assert(os.path.isdir(file_local_path))
-            return file_local_path + "index.html"
-        elif "base.css" in requestedFilePath:
-            assert(os.path.isdir(file_local_path))
-            return file_local_path + "base.css"
-        elif "deep.css" in requestedFilePath:
-            return file_local_path + "deep.css"
-            
+        if not os.path.isdir(file_local_path):
+            return False
+        if os.path.isdir(file_local_path):
+            if os.path.isfile(file_local_path):
+                return file_local_path
+        
+
     def file_type_identifier(self, fileLocalPath):
         # The file actually has a specific type
         if len(fileLocalPath.strip(".").split(".")) > 1:
@@ -159,7 +158,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         
     def file_content_reader(self, fileLocalPath):
         return "\r\n" + open(fileLocalPath, "r").read()
-
+        
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
 
