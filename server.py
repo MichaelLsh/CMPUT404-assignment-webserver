@@ -32,6 +32,16 @@ class MyWebServer(socketserver.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
+
+        """
+        Citation for the following code block
+        Author: Liam Kelly https://stackoverflow.com/users/1987437/liam-kelly
+        URL: https://stackoverflow.com/questions/39090366/how-to-parse-raw-http-request-in-python-3
+        License: MIT License
+        Data&Time: Jan 25, 2023 5 pm
+        """
+        # Parse the raw request 
+        
         self.request.sendall(bytearray("OK",'utf-8'))
 
 if __name__ == "__main__":
@@ -40,7 +50,8 @@ if __name__ == "__main__":
     socketserver.TCPServer.allow_reuse_address = True
     # Create the server, binding to localhost on port 8080
     server = socketserver.TCPServer((HOST, PORT), MyWebServer)
-
+    
     # Activate the server; this will keep running until you
     # interrupt the program with Ctrl-C
     server.serve_forever()
+
