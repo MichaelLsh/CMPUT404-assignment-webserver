@@ -146,6 +146,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
 
     def file_content_type_identifier(self, fileLocalPath):
         file_content_type = "Content-Type: "
+        print("***** " + fileLocalPath)
         file_type = self.file_type_identifier(fileLocalPath)
         if file_type != None:
             if file_type == "html":
