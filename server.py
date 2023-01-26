@@ -135,6 +135,9 @@ class MyWebServer(socketserver.BaseRequestHandler):
 
     def file_type_identifier(self, fileLocalPath):
         # The file actually has a specific type
+        print("*&^%$#")
+        print(fileLocalPath)
+        print(fileLocalPath.strip(".").split("."))
         if len(fileLocalPath.strip(".").split(".")) > 1:
             return fileLocalPath.strip(".").split(".")[1]
         else:
