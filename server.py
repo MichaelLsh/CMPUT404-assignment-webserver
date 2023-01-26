@@ -77,11 +77,11 @@ class MyWebServer(socketserver.BaseRequestHandler):
             file_content = self.file_content_reader(file_local_path)
         except IsADirectoryError:
             status_code = "301 Moved Permanently"
-            server_response = protocol_version + " " + status_code + "Location: " + file_local_path + "/"
+            server_response = protocol_version + " " + status_code + "Location: " + file_local_path
             self.request.sendall(bytearray(server_response, "utf-8"))
 
         # When the local path and requested file are valid
-        status_code = "200 OK \r\n"
+        status_code = "200 OK\r\n"
         server_response = protocol_version + " " + status_code + file_content_type + file_content
         self.request.sendall(bytearray(server_response, "utf-8"))
         # self.request.sendall(bytearray("OK",'utf-8'))
@@ -101,16 +101,13 @@ class MyWebServer(socketserver.BaseRequestHandler):
             return False
         else:
             return False
-        
+
     def file_or_directory_exists(self, requestedFilePath):
         """
         Helper function for the webserver to check validness of the requested file or local path to the requested file 
         """
         file_local_path = "./www" + requestedFilePath
-        if os.path.isdir(file_local_path): 
-            if os.path.isfile(file_local_path):
-                return True
-        elif os.path.isfile(file_local_path):
+        if os.path.isdir(file_local_path) or os.path.isfile(file_local_path):
             return True
         else:
             return False
@@ -130,12 +127,11 @@ class MyWebServer(socketserver.BaseRequestHandler):
         Helper function for locating the requested file's path locally
         """
         file_local_path = "./www" + requestedFilePath
-        if not os.path.isdir(file_local_path):
-            return False
-        if os.path.isdir(file_local_path):
-            if os.path.isfile(file_local_path):
-                return file_local_path
-        
+        if os.path.isfile(file_local_path):
+            return file_local_path
+        else:
+            assert(os.path.isdir(file_local_path))
+            return file_local_path + "index.html"
 
     def file_type_identifier(self, fileLocalPath):
         # The file actually has a specific type
@@ -146,7 +142,6 @@ class MyWebServer(socketserver.BaseRequestHandler):
 
     def file_content_type_identifier(self, fileLocalPath):
         file_content_type = "Content-Type: "
-        print("***** " + fileLocalPath)
         file_type = self.file_type_identifier(fileLocalPath)
         if file_type != None:
             if file_type == "html":
@@ -159,7 +154,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         
     def file_content_reader(self, fileLocalPath):
         return "\r\n" + open(fileLocalPath, "r").read()
-        
+
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
 
