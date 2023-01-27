@@ -34,14 +34,14 @@ class MyWebServer(socketserver.BaseRequestHandler):
         Helper function to check requested file existence
         """
         target_file_path = "./www" + requested_file_path
-        return os.path.exists(target_file_path)
+        return (os.path.exists(target_file_path))
 
     def backward_dir_access_checker(self, requested_file_path):
         """
         Check for backward directory access, ie /../../.. etc
         """
         dirs = requested_file_path.split("/")
-        return ".." in dirs
+        return (".." in dirs)
 
     def file_type_getter(self, requested_file_path):
         try:
@@ -49,10 +49,10 @@ class MyWebServer(socketserver.BaseRequestHandler):
         except:
             return None
         # Here we only consider html and css file types
-        if requested_file_type == "html":
-            return "text/html; charset=utf-8\r\n"
-        else:
+        if requested_file_type == "css":
             return "text/css; charset=utf-8\r\n"
+        else:
+            return "text/html; charset=utf-8\r\n"
 
     def file_content_reader(self, requested_file_path):
         return open( "./www" + requested_file_path, "r").read()
@@ -70,7 +70,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         # Here only GET request method is acceptable
         if request_method == "GET":
             # if requested file exists and can be accessible backwards thru directory
-            if self.file_existence_checker(requested_file_path) and self.backward_dir_access_checker(requested_file_path):
+            if self.file_existence_checker(requested_file_path) and (not self.backward_dir_access_checker(requested_file_path)):
                 # Attempt to get requested file type and content
                 server_response = protocol_version + " 200 OK\r\n"
                 requested_file_type = self.file_type_getter(requested_file_path)
@@ -83,8 +83,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     if requested_file_path[-1] != "/":
                         # lead to a actual file path after adding a "/" at the end of requested file path string
                         # -> 301
-                        server_response = protocol_version + " 301 Moved Permanently\r\n"
-                        server_response += "Location: " + requested_file_path + "/\r\n"
+                        server_response = protocol_version + " 301 Moved Permanently\r\n" + "Location: " + requested_file_path + "/\r\n"
 
                     # If requested file path string ends with "/"
                     # auto-provide index.html of target directory
