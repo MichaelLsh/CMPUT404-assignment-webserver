@@ -71,7 +71,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             # if requested file exists and can be accessible backwards thru directory
             if self.file_existence_checker(requested_file_path) and self.backward_dir_access_checker(requested_file_path):
                 # Attempt to get requested file type and content
-                server_response = " 200 OK\r\n"
+                server_response = protocol_version + " 200 OK\r\n"
                 requested_file_type = self.file_type_getter(requested_file_path)
                 if requested_file_type != None: # requested file type is either html or css
                                                 # requested file path targets a file 
