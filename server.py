@@ -29,6 +29,36 @@ import os
 
 class MyWebServer(socketserver.BaseRequestHandler):
     
+    def file_existence_checker(self, requested_file_path):
+        """
+        Helper function to check requested file existence
+        """
+        target_file_path = "./www" + requested_file_path
+        return os.path.exists(target_file_path)
+
+    def backward_dir_access_checker(self, requested_file_path):
+        """
+        Check for backward directory access, ie /../../.. etc
+        """
+        dirs = requested_file_path.split("/")
+        if ".." in dirs:
+            return True
+        else:
+            return False
+    def file_type_getter(self, requested_file_path):
+        try:
+            requested_file_type = requested_file_path.split(".")[1]
+        except:
+            return None
+        # Here we only consider html and css file types
+        if requested_file_type == "html":
+            return "text/html; charset=utf-8\r\n"
+        else:
+            return "text/css; charset=utf-8\r\n"
+
+    def file_content_reader(self, requested_file_path):
+        return open( "./www" + requested_file_path, "r").read()
+
     def handle(self):
         self.data = self.request.recv(1024).strip()
         # print ("Got a request of: %s\n" % self.data)  
@@ -67,7 +97,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 server_response += "Content-Type: " + requested_file_type + "\r\n"
                 server_response += "\r\n\n" + requested_file_content
                 self.request.sendall(bytearray(server_response,'utf-8'))
-                return 
+                # return 
 
             else: # Cannot locate the requested file -> 404 
                 server_response = protocol_version + " 404 Not Found\r\n"
@@ -77,38 +107,10 @@ class MyWebServer(socketserver.BaseRequestHandler):
         else: # When request method is invalid -> 405 
             server_response = protocol_version + "405 Method Not Allowed\r\n"
             self.request.sendall(bytearray("OK",'utf-8'))
-            return 
+            return
     
 
-    def file_existence_checker(self, requested_file_path):
-        """
-        Helper function to check requested file existence
-        """
-        target_file_path = "./www" + requested_file_path
-        return os.path.exists(target_file_path)
-
-    def backward_dir_access_checker(self, requested_file_path):
-        """
-        Check for backward directory access, ie /../../.. etc
-        """
-        dirs = requested_file_path.split("/")
-        if ".." in dirs:
-            return True
-        else:
-            return False
-    def file_type_getter(self, requested_file_path):
-        try:
-            requested_file_type = requested_file_path.split(".")[1]
-        except:
-            return None
-        # Here we only consider html and css file types
-        if requested_file_type == "html":
-            return "text/html; charset=utf-8\r\n"
-        else:
-            return "text/css; charset=utf-8\r\n"
-
-    def file_content_reader(self, requested_file_path):
-        return open( "./www" + requested_file_path, "r").read()
+    
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
