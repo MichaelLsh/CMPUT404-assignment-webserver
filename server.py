@@ -63,7 +63,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         # self.request.sendall(bytearray("OK",'utf-8'))
         # Parse the raw request 
         # to get request method, requested file path, protocol version 
-        request_method, requested_file_path, protocol_version = self.data.decode('utf-8').split("\r\n")[0].split(" ")
+        request_method, requested_file_path, protocol_version = self.data.decode("utf-8").split("\r\n")[0].split(" ")
 
 
         # Determine if request method is valid
@@ -96,17 +96,17 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 server_response += "Content-Length: " + str(len(requested_file_content)) + "\r\n"
                 server_response += "Content-Type: " + requested_file_type + "\r\n"
                 server_response += "\r\n\n" + requested_file_content
-                self.request.sendall(bytearray(server_response,'utf-8'))
+                self.request.sendall(bytearray(server_response,"utf-8"))
                 # return 
 
             else: # Cannot locate the requested file -> 404 
                 server_response = protocol_version + " 404 Not Found\r\n"
-                self.request.sendall(bytearray(server_response,'utf-8'))
+                self.request.sendall(bytearray(server_response,"utf-8"))
                 return
 
         else: # When request method is invalid -> 405 
             server_response = protocol_version + " 405 Method Not Allowed\r\n"
-            self.request.sendall(bytearray("OK",'utf-8'))
+            self.request.sendall(bytearray(server_response,"utf-8"))
             return
     
 
