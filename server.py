@@ -29,36 +29,6 @@ import os
 
 class MyWebServer(socketserver.BaseRequestHandler):
     
-    def file_existence_checker(self, requested_file_path):
-        """
-        Helper function to check requested file existence
-        """
-        target_file_path = "./www" + requested_file_path
-        return (os.path.exists(target_file_path))
-
-    def backward_dir_access_checker(self, requested_file_path):
-        """
-        Check for backward directory access, ie /../../.. etc
-        """
-        dirs = requested_file_path.split("/")
-        return (".." in dirs)
-
-    def file_type_getter(self, requested_file_path):
-        try:
-            requested_file_type = requested_file_path.split(".")[1]
-        except:
-            return None
-        # Here we only consider html and css file types
-        if requested_file_type == "html":
-            return "text/html; charset=utf-8\r\n"
-        elif requested_file_type == "css":
-            return "text/css; charset=utf-8\r\n"
-        else:
-            return "text/plain; charset=utf-8\r\n"
-
-    def file_content_reader(self, requested_file_path):
-        return open( "./www" + requested_file_path, "r").read()
-
     def handle(self):
         self.data = self.request.recv(1024).strip()
         # print ("Got a request of: %s\n" % self.data)  
@@ -109,6 +79,35 @@ class MyWebServer(socketserver.BaseRequestHandler):
             self.request.sendall(bytearray(server_response,"utf-8"))
             return
     
+    def file_existence_checker(self, requested_file_path):
+        """
+        Helper function to check requested file existence
+        """
+        target_file_path = "./www" + requested_file_path
+        return (os.path.exists(target_file_path))
+
+    def backward_dir_access_checker(self, requested_file_path):
+        """
+        Check for backward directory access, ie /../../.. etc
+        """
+        dirs = requested_file_path.split("/")
+        return (".." in dirs)
+
+    def file_type_getter(self, requested_file_path):
+        try:
+            requested_file_type = requested_file_path.split(".")[1]
+        except:
+            return None
+        # Here we only consider html and css file types
+        if requested_file_type == "html":
+            return "text/html; charset=utf-8\r\n"
+        elif requested_file_type == "css":
+            return "text/css; charset=utf-8\r\n"
+        else:
+            return "text/plain; charset=utf-8\r\n"
+
+    def file_content_reader(self, requested_file_path):
+        return open( "./www" + requested_file_path, "r").read()
 
     
 
