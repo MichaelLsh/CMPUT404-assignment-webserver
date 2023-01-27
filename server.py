@@ -68,7 +68,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         # Determine if request method is valid
         # Here only GET request method is acceptable
         if request_method == "GET":
-            # if requested file exists and can be accessible backwards thru directory
+            # if requested file exists and cannot be accessible backwards thru directories
             if self.file_existence_checker(requested_file_path) and (not self.backward_dir_access_checker(requested_file_path)):
                 # Attempt to get requested file type and content
                 server_response = protocol_version + " 200 OK\r\n"
