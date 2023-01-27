@@ -65,6 +65,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         # to get request method, requested file path, protocol version 
         request_method, requested_file_path, protocol_version = self.data.decode('utf-8').split("\r\n")[0].split(" ")
 
+
         # Determine if request method is valid
         # Here only GET request method is acceptable
         if request_method == "GET":
@@ -95,6 +96,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 server_response += "Content-Length: " + str(len(requested_file_content)) + "\r\n"
                 server_response += "Content-Type: " + requested_file_type + "\r\n"
                 server_response += "\r\n\n" + requested_file_content
+                print("!@#$%^&*" + server_response)
                 self.request.sendall(bytearray(server_response,'utf-8'))
                 # return 
 
