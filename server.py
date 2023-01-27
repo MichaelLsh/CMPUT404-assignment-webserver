@@ -65,7 +65,6 @@ class MyWebServer(socketserver.BaseRequestHandler):
         # to get request method, requested file path, protocol version 
         request_method, requested_file_path, protocol_version = self.data.decode("utf-8").split("\r\n")[0].split(" ")
 
-
         # Determine if request method is valid
         # Here only GET request method is acceptable
         if request_method == "GET":
@@ -79,8 +78,8 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     requested_file_content = self.file_content_reader(requested_file_path)
                 else: # requested file path targets a file targets a directory
                     # If requested file path doesn't end with a "/"
-                    # if not requested_file_path.endswith("/"):
-                    if requested_file_path[-1] != "/":
+                    if not requested_file_path.endswith("/"):
+                    # if requested_file_path[-1] != "/":
                         # lead to a actual file path after adding a "/" at the end of requested file path string
                         # -> 301
                         server_response = protocol_version + " 301 Moved Permanently\r\n" + "Location: " + requested_file_path + "/\r\n"
@@ -90,7 +89,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     requested_file_type = "text/html; charset=utf-8\r\n"
                     requested_file_content = self.file_content_reader(requested_file_path + "/index.html")
 
-                # generate the headers 
+                # generate the rest of headers after webserver response 
                 server_response += "Connection: Close\r\n"
                 server_response += "Content-Length: " + str(len(requested_file_content)) + "\r\n"
                 server_response += "Content-Type: " + requested_file_type + "\r\n"
