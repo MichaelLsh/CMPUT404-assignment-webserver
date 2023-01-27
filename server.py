@@ -71,7 +71,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             # if requested file exists and can be accessible backwards thru directory
             if self.file_existence_checker(requested_file_path) and self.backward_dir_access_checker(requested_file_path):
                 # Attempt to get requested file type and content
-                server_response = "200 OK\r\n"
+                server_response = " 200 OK\r\n"
                 requested_file_type = self.file_type_getter(requested_file_path)
                 if requested_file_type != None: # requested file type is either html or css
                                                 # requested file path targets a file 
@@ -82,7 +82,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     # if requested_file_path[-1] != "/":
                         # lead to a actual file path after adding a "/" at the end of requested file path string
                         # -> 301
-                        response = protocol_version + "301 Moved Permanently\r\n"
+                        response = protocol_version + " 301 Moved Permanently\r\n"
                         response += "Location: " + requested_file_path + "/\r\n"
 
                     # If requested file path string ends with "/"
@@ -99,12 +99,12 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 # return 
 
             else: # Cannot locate the requested file -> 404 
-                server_response = protocol_version + "404 Not Found\r\n"
+                server_response = protocol_version + " 404 Not Found\r\n"
                 self.request.sendall(bytearray(server_response,'utf-8'))
                 return
 
         else: # When request method is invalid -> 405 
-            server_response = protocol_version + "405 Method Not Allowed\r\n"
+            server_response = protocol_version + " 405 Method Not Allowed\r\n"
             self.request.sendall(bytearray("OK",'utf-8'))
             return
     
