@@ -65,10 +65,11 @@ class MyWebServer(socketserver.BaseRequestHandler):
 
         # If the request method type is valid
         # 
+        print("@#$%^&*")
         print(request_file_path)
-        
+
         # print ("Got a request of: %s\n" % self.data)
-        self.request.sendall(bytearray("OK",'utf-8'))
+        self.request.sendall(bytearray("HTTP/1.0 200 OK",'utf-8'))
 
     def is_method_processed(self, requestMethod):
         """
