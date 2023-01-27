@@ -50,9 +50,9 @@ class MyWebServer(socketserver.BaseRequestHandler):
             return None
         # Here we only consider html and css file types
         if requested_file_type == "html":
-            return "text/css; charset=utf-8\r\n"
-        elif requested_file_type == "css":
             return "text/html; charset=utf-8\r\n"
+        elif requested_file_type == "css":
+            return "text/css; charset=utf-8\r\n"
         else:
             return "text/plain; charset=utf-8\r\n"
 
