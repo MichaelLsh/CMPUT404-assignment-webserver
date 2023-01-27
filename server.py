@@ -98,10 +98,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
 
     def file_local_path_finder(self, request_file_path):
         local_file_path = "./www" + request_file_path
-        if os.path.isfile(local_file_path): 
-            return local_file_path
-        
-
+        return local_file_path
 
     def is_method_processed(self, request_method):
         """
