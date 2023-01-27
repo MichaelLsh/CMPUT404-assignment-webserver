@@ -79,12 +79,12 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     requested_file_content = self.file_content_reader(requested_file_path)
                 else: # requested file path targets a file targets a directory
                     # If requested file path doesn't end with a "/"
-                    if not requested_file_path.endswith("/"):
-                    # if requested_file_path[-1] != "/":
+                    # if not requested_file_path.endswith("/"):
+                    if requested_file_path[-1] != "/":
                         # lead to a actual file path after adding a "/" at the end of requested file path string
                         # -> 301
-                        response = protocol_version + " 301 Moved Permanently\r\n"
-                        response += "Location: " + requested_file_path + "/\r\n"
+                        server_response = protocol_version + " 301 Moved Permanently\r\n"
+                        server_response += "Location: " + requested_file_path + "/\r\n"
 
                     # If requested file path string ends with "/"
                     # auto-provide index.html of target directory
@@ -96,7 +96,6 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 server_response += "Content-Length: " + str(len(requested_file_content)) + "\r\n"
                 server_response += "Content-Type: " + requested_file_type + "\r\n"
                 server_response += "\r\n\n" + requested_file_content
-                print("!@#$%^&*" + server_response)
                 self.request.sendall(bytearray(server_response,'utf-8'))
                 # return 
 
