@@ -81,6 +81,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 else: # requested file path targets a file targets a directory
                     # If requested file path doesn't end with a "/"
                     if not requested_file_path.endswith("/"):
+                    # if requested_file_path[-1] != "/":
                         # lead to a actual file path after adding a "/" at the end of requested file path string
                         # -> 301
                         response = protocol_version + " 301 Moved Permanently\r\n"
@@ -89,7 +90,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     # If requested file path string ends with "/"
                     # auto-provide index.html of target directory
                     requested_file_type = "text/html; charset=utf-8\r\n"
-                    requested_file_content = self.get_content(requested_file_path + "/index.html")
+                    requested_file_content = self.file_content_reader(requested_file_path + "/index.html")
 
                 # generate the headers 
                 server_response += "Connection: Close\r\n"
