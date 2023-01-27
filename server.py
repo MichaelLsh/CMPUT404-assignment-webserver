@@ -40,20 +40,22 @@ class MyWebServer(socketserver.BaseRequestHandler):
         """
         # ========================================================================================= #
         # Parse the raw request 
-        fields = self.data.split(b"\r\n")
-        request_method_type, request_file_path, protocol_version = fields[0].decode("ASCII").split(" ")
+        # fields = self.data.split(b"\r\n")
+        # request_method_type, request_file_path, protocol_version = fields[0].decode("ASCII").split(" ")
         
-        headers = fields[1:] # Ignore the GET / HTTP/1.1
-        output = {}
+        request_method_type, request_file_path, protocol_version = self.data.decode('utf-8').split("\r\n")[0].split(" ")
+        
+        # headers = fields[1:] # Ignore the GET / HTTP/1.1
+        # output = {}
 
-        # Split each line by http key-value pairs, decode from bytes to char
-        for each_header in headers:
-            items = each_header.split(b":")
-            key = items[0].decode("ASCII")
-            values = items[1:]
-            for i in range(len(values)):
-                values[i] = values[i].decode("ASCII")
-            output[key] = values
+        # # Split each line by http key-value pairs, decode from bytes to char
+        # for each_header in headers:
+        #     items = each_header.split(b":")
+        #     key = items[0].decode("ASCII")
+        #     values = items[1:]
+        #     for i in range(len(values)):
+        #         values[i] = values[i].decode("ASCII")
+        #     output[key] = values
         # ========================================================================================= #
 
         # Determine if request method type is valid 
