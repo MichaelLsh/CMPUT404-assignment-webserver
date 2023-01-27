@@ -69,8 +69,8 @@ class MyWebServer(socketserver.BaseRequestHandler):
         if not self.is_file_type(request_file_path) or self.is_legal_directory(request_file_path):
             
             status = "404 Not Found\r\n"
-            response =  protocol_version + " " + status
-            self.request.sendall(bytearray(response, "utf-8"))
+            server_response =  protocol_version + " " + status
+            self.request.sendall(bytearray(server_response, "utf-8"))
             return
 
         # If the requested file's local path is valid
@@ -86,12 +86,12 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 request_file_path += "/"
                 status_code = "301 Moved Permanently\r\n" + "Location: " + request_file_path
                 server_response =  protocol_version + " " + status_code + local_file_type + local_file_content
-                self.request.sendall(bytearray(response, "utf-8"))
+                self.request.sendall(bytearray(server_response, "utf-8"))
                 return
         # The request method and requested file are valid
         status_code = "200 OK\r\n"
         server_response =  protocol_version + " " + status_code + local_file_type + local_file_content
-        self.request.sendall(bytearray(response, "utf-8"))
+        self.request.sendall(bytearray(server_response, "utf-8"))
         return
         # print ("Got a request of: %s\n" % self.data)
         # self.request.sendall(bytearray("HTTP/1.0 200 OK",'utf-8'))
