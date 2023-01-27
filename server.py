@@ -68,7 +68,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 server_response += "\r\n\n" + requested_file_content
                 self.request.sendall(bytearray(server_response,'utf-8'))
                 return 
-                
+
             else: # Cannot locate the requested file -> 404 
                 server_response = protocol_version + " 404 Not Found\r\n"
                 self.request.sendall(bytearray(server_response,'utf-8'))
@@ -104,10 +104,8 @@ class MyWebServer(socketserver.BaseRequestHandler):
         # Here we only consider html and css file types
         if requested_file_type == "html":
             return "text/html; charset=utf-8\r\n"
-        elif requested_file_type == "css":
+        else:
             return "text/css; charset=utf-8\r\n"
-        else: 
-            return "text/plain charset=utf-8\r\n"
 
     def file_content_reader(self, requested_file_path):
         return open( "./www" + requested_file_path, "r").read()
