@@ -49,10 +49,12 @@ class MyWebServer(socketserver.BaseRequestHandler):
         except:
             return None
         # Here we only consider html and css file types
-        if requested_file_type == "css":
+        if requested_file_type == "html":
             return "text/css; charset=utf-8\r\n"
-        else:
+        elif requested_file_type == "css":
             return "text/html; charset=utf-8\r\n"
+        else:
+            return "text/plain; charset=utf-8\r\n"
 
     def file_content_reader(self, requested_file_path):
         return open( "./www" + requested_file_path, "r").read()
